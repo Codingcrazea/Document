@@ -1,0 +1,13 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Secret Environment Keys (Do NOT upload to GitHub)
+.env
+.env.local
+*.env
+
+# Vercel Deployment Cache
+.vercel/
+
