@@ -1,0 +1,27 @@
+{
+  "pricing": {
+    "vipPriceINR": 499,
+    "currency": "INR",
+    "lifetimeEnabled": true
+  },
+  "ads": [
+    {
+      "campaignId": "camp_default_01",
+      "title": "Unlock Unlimited Conversions",
+      "description": "Go Premium today for zero ads and priority batch processing.",
+      "ctaText": "Upgrade Now",
+      "targetUrl": "https://documentreader-two.vercel.app/api/payment/checkout",
+      "placementId": "home_bottom_banner",
+      "adType": "banner",
+      "priority": 10,
+      "active": true,
+      "displayIntervalSeconds": 60,
+      "imageUrl": ""
+    }
+  ],
+  "telemetryStats": {
+    "totalLaunches": 0,
+    "lastLaunchTime": 0
+  }
+}
+

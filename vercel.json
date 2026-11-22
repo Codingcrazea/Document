@@ -1,6 +1,15 @@
 {
   "version": 2,
+  "functions": {
+    "api/**/*.ts": {
+      "includeFiles": "admin.html,data/**"
+    }
+  },
   "routes": [
+    {
+      "src": "/admin",
+      "dest": "/api/admin/index.ts"
+    },
     {
       "src": "/api/(.*)",
       "headers": {
@@ -12,4 +21,3 @@
     }
   ]
 }
-

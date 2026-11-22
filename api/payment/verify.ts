@@ -10,11 +10,16 @@ interface VercelRequest {
 }
 
 interface VercelResponse {
+  setHeader(name: string, value: string): void;
   status(code: number): VercelResponse;
   json(body: any): void;
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
   if (req.method === 'OPTIONS') {
     return res.status(200).json({ ok: true });
   }
@@ -24,7 +29,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = req.body || {};
+    let parsedBody = req.body;
+    if (typeof parsedBody === 'string') {
+      try {
+        parsedBody = JSON.parse(parsedBody);
+      } catch {
+        parsedBody = {};
+      }
+    }
+
+    const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = parsedBody || {};
 
     if (!razorpay_payment_id) {
       return res.status(400).json({ success: false, error: 'Missing payment ID' });

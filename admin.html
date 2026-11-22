@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DocUtility Pro — Admin Control Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #E50914;
+      --primary-hover: #b80710;
+      --bg-dark: #0B0F19;
+      --surface-dark: #141824;
+      --card-bg: #1E2333;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --text-white: #F8FAFC;
+      --text-muted: #94A3B8;
+      --accent-blue: #38BDF8;
+      --accent-green: #10B981;
+      --accent-gold: #F59E0B;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-white);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: var(--surface-dark);
+      border-bottom: 1px solid var(--border-color);
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .logo-box {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .logo-badge {
+      background: var(--primary);
+      color: white;
+      font-size: 15px;
+      font-weight: 800;
+      padding: 8px 14px;
+      border-radius: 10px;
+      letter-spacing: 0.5px;
+    }
+    .logo-text h1 {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+    }
+    .logo-text p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .status-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--accent-green);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 30px;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent-green);
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 0.4; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.1); }
+      100% { opacity: 0.4; transform: scale(0.9); }
+    }
+    .nav-tabs {
+      background: var(--surface-dark);
+      padding: 0 32px;
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 16px 22px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+    }
+    .tab-btn:hover { color: var(--text-white); }
+    .tab-btn.active {
+      color: var(--text-white);
+      border-bottom-color: var(--primary);
+    }
+    main {
+      flex: 1;
+      padding: 32px;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .card {
+      background: var(--surface-dark);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .card-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .card-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    .preset-grid {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .preset-chip {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-white);
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .preset-chip:hover, .preset-chip.active {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+    .form-group {
+      margin-bottom: 18px;
+    }
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #CBD5E1;
+    }
+    .form-input, .form-select {
+      width: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-white);
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-input:focus, .form-select:focus {
+      border-color: var(--accent-blue);
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .primary-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s;
+    }
+    .primary-btn:hover { background: var(--primary-hover); }
+    .secondary-btn {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-white);
+      border: 1px solid var(--border-color);
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .secondary-btn:hover { background: rgba(255, 255, 255, 0.15); }
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #1E293B;
+      color: var(--accent-green);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      display: none;
+      z-index: 1000;
+    }
+    .ads-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+    }
+    .ads-table th, .ads-table td {
+      text-align: left;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 13px;
+    }
+    .ads-table th {
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+    }
+    .tag {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .tag-blue { background: rgba(56, 189, 248, 0.15); color: var(--accent-blue); }
+    .tag-green { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); }
+    .tag-gold { background: rgba(245, 158, 11, 0.15); color: var(--accent-gold); }
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #334155;
+      transition: .3s;
+      border-radius: 24px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+    input:checked + .slider { background-color: var(--accent-green); }
+    input:checked + .slider:before { transform: translateX(20px); }
+    .ad-preview-box {
+      background: #0F131F;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .ad-preview-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .ad-preview-img {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      background: #1E2333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      overflow: hidden;
+    }
+    .preview-badge {
+      font-size: 10px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--accent-gold);
+    }
+    .preview-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: white;
+      margin-top: 2px;
+    }
+    .preview-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .preview-cta {
+      background: var(--primary);
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .danger-btn {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #EF4444;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .danger-btn:hover { background: rgba(239, 68, 68, 0.3); }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo-box">
+      <div class="logo-badge">PRO</div>
+      <div class="logo-text">
+        <h1>DocUtility Pro — Admin Hub</h1>
+        <p>Live Remote Configuration & Custom Ads Manager</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="status-pill">
+        <div class="status-dot"></div>
+        Backend Synchronized
+      </div>
+    </div>
+  </header>
+
+  <nav class="nav-tabs">
+    <button id="tab-btn-pricing" class="tab-btn active" onclick="switchTab('pricing', this)">💰 VIP Pricing & Plans</button>
+    <button id="tab-btn-ads" class="tab-btn" onclick="switchTab('ads', this)">📢 Custom In-House Ads</button>
+    <button id="tab-btn-telemetry" class="tab-btn" onclick="switchTab('telemetry', this)">📊 Live Telemetry</button>
+  </nav>
+
+  <main>
+    <!-- TAB 1: PRICING -->
+    <div id="tab-pricing" class="tab-content active">
+      <div class="card">
+        <h2 class="card-title">💵 VIP Lifetime License Fee</h2>
+        <p class="card-desc">
+          Set the exact amount charged to users when upgrading to VIP Lifetime. Changes made here apply instantly to the Android application, Razorpay orders, and checkout modal.
+        </p>
+
+        <label class="form-label">Quick Preset Amounts:</label>
+        <div class="preset-grid">
+          <button class="preset-chip" onclick="setPresetPrice(99, this)">₹99 (Special Promo)</button>
+          <button class="preset-chip" onclick="setPresetPrice(199, this)">₹199</button>
+          <button class="preset-chip" onclick="setPresetPrice(299, this)">₹299</button>
+          <button class="preset-chip active" onclick="setPresetPrice(499, this)">₹499 (Standard)</button>
+          <button class="preset-chip" onclick="setPresetPrice(999, this)">₹999</button>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Active Price in INR (₹)</label>
+            <input type="number" id="vip-price-input" class="form-input" value="499" min="10" step="10">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Currency</label>
+            <input type="text" class="form-input" value="INR" readonly disabled>
+          </div>
+        </div>
+
+        <button class="primary-btn" onclick="savePricing()">💾 Save & Publish Pricing</button>
+      </div>
+    </div>
+
+    <!-- TAB 2: ADS -->
+    <div id="tab-ads" class="tab-content">
+      <div class="card">
+        <h2 class="card-title">🎯 Create / Edit Custom Ad Campaign</h2>
+        <p class="card-desc">
+          Upload custom promotional banners that appear directly inside the mobile app. All ads are automatically suppressed for verified VIP users.
+        </p>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Campaign Title</label>
+            <input type="text" id="ad-title" class="form-input" placeholder="e.g. Unlock Complete Document Suite" oninput="updatePreview()">
+          </div>
+          <div class="form-group">
+            <label class="form-label">CTA Button Label</label>
+            <input type="text" id="ad-cta" class="form-input" placeholder="e.g. Upgrade Now" oninput="updatePreview()">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Description / Subtitle</label>
+          <input type="text" id="ad-desc" class="form-input" placeholder="e.g. Lifetime access to offline OCR, PDF merge and ad-free experience." oninput="updatePreview()">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Target Placement inside App</label>
+            <select id="ad-placement" class="form-select">
+              <option value="home_bottom_banner">Home Screen Bottom Banner</option>
+              <option value="tools_banner">Tools Hub Header Banner</option>
+              <option value="rewarded_interstitial">24-Hour Pass Unlock</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Target Click URL</label>
+            <input type="text" id="ad-url" class="form-input" placeholder="https://..." value="https://documentreader-two.vercel.app/api/payment/checkout">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Display Interval (Seconds)</label>
+            <input type="number" id="ad-interval" class="form-input" value="60" min="10">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Ad Image (Optional Banner Graphic)</label>
+            <input type="file" id="ad-image-file" class="form-input" accept="image/*" onchange="handleImageUpload(event)">
+          </div>
+        </div>
+
+        <!-- Live Ad Banner Preview -->
+        <label class="form-label">Live App Banner Preview:</label>
+        <div class="ad-preview-box">
+          <div class="ad-preview-left">
+            <div id="preview-img" class="ad-preview-img">📄</div>
+            <div>
+              <div class="preview-badge">Promoted</div>
+              <div id="preview-title-text" class="preview-title">Unlock Unlimited Conversions</div>
+              <div id="preview-desc-text" class="preview-desc">Go Premium today for zero ads and priority batch processing.</div>
+            </div>
+          </div>
+          <div id="preview-cta-text" class="preview-cta">Upgrade Now</div>
+        </div>
+
+        <div style="margin-top: 20px;">
+          <button class="primary-btn" onclick="saveAdCampaign()">🚀 Save Campaign</button>
+        </div>
+      </div>
+
+      <!-- Active Campaigns List -->
+      <div class="card">
+        <h2 class="card-title">📋 Active In-House Campaigns</h2>
+        <table class="ads-table">
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>Campaign Name</th>
+              <th>Placement</th>
+              <th>CTA</th>
+              <th>Interval</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="campaigns-tbody">
+            <!-- Populated via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 3: TELEMETRY -->
+    <div id="tab-telemetry" class="tab-content">
+      <div class="card">
+        <h2 class="card-title">📊 Live Mobile Telemetry</h2>
+        <p class="card-desc">Anonymous device pings recorded upon DocUtility Pro application launch.</p>
+        <div class="preset-grid">
+          <div class="card" style="flex:1; margin:0; text-align:center;">
+            <div style="font-size:32px; font-weight:800; color:var(--accent-blue);" id="stat-launches">1</div>
+            <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">Total App Launches</div>
+          </div>
+          <div class="card" style="flex:1; margin:0; text-align:center;">
+            <div style="font-size:32px; font-weight:800; color:var(--accent-green);">v1.0.0</div>
+            <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">App Version</div>
+          </div>
+          <div class="card" style="flex:1; margin:0; text-align:center;">
+            <div style="font-size:32px; font-weight:800; color:var(--accent-gold);">100% Offline</div>
+            <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">Document Security</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="toast" class="toast">Saved Successfully!</div>
+
+  <script>
+    var currentConfig = {
+      pricing: { vipPriceINR: 499 },
+      ads: []
+    };
+    var currentUploadedImage = '';
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function switchTab(tabId, el) {
+      var allTabs = document.querySelectorAll('.tab-btn');
+      for (var i = 0; i < allTabs.length; i++) {
+        allTabs[i].classList.remove('active');
+      }
+      var allContents = document.querySelectorAll('.tab-content');
+      for (var j = 0; j < allContents.length; j++) {
+        allContents[j].classList.remove('active');
+      }
+      var activeBtn = el || document.getElementById('tab-btn-' + tabId);
+      if (activeBtn) activeBtn.classList.add('active');
+      var target = document.getElementById('tab-' + tabId);
+      if (target) target.classList.add('active');
+    }
+
+    function showToast(msg) {
+      var toast = document.getElementById('toast');
+      toast.innerText = msg || 'Changes Saved & Published!';
+      toast.style.display = 'block';
+      setTimeout(function() { toast.style.display = 'none'; }, 3000);
+    }
+
+    function setPresetPrice(amt, el) {
+      document.getElementById('vip-price-input').value = amt;
+      var chips = document.querySelectorAll('.preset-chip');
+      for (var i = 0; i < chips.length; i++) {
+        chips[i].classList.remove('active');
+      }
+      if (el) el.classList.add('active');
+    }
+
+    function updatePreview() {
+      var title = document.getElementById('ad-title').value || 'Unlock Unlimited Conversions';
+      var desc = document.getElementById('ad-desc').value || 'Go Premium today for zero ads and priority batch processing.';
+      var cta = document.getElementById('ad-cta').value || 'Upgrade Now';
+
+      document.getElementById('preview-title-text').innerText = title;
+      document.getElementById('preview-desc-text').innerText = desc;
+      document.getElementById('preview-cta-text').innerText = cta;
+    }
+
+    function handleImageUpload(e) {
+      var file = e.target.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function(evt) {
+        currentUploadedImage = evt.target.result;
+        var imgElem = document.getElementById('preview-img');
+        imgElem.innerHTML = '<img src="' + currentUploadedImage + '" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function loadConfig() {
+      fetch('/api/admin/config')
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          currentConfig = data;
+          if (currentConfig.pricing && currentConfig.pricing.vipPriceINR) {
+            document.getElementById('vip-price-input').value = currentConfig.pricing.vipPriceINR;
+          }
+          if (currentConfig.telemetryStats && currentConfig.telemetryStats.totalLaunches !== undefined) {
+            var elLaunches = document.getElementById('stat-launches');
+            if (elLaunches) elLaunches.innerText = currentConfig.telemetryStats.totalLaunches;
+          }
+          renderCampaignsTable();
+        })
+        .catch(function(err) {
+          console.warn('Could not load remote config, using defaults:', err);
+          renderCampaignsTable();
+        });
+    }
+
+    function renderCampaignsTable() {
+      var tbody = document.getElementById('campaigns-tbody');
+      tbody.innerHTML = '';
+      var campaigns = currentConfig.ads || [];
+      if (campaigns.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#94A3B8;">No active campaigns. Create one above!</td></tr>';
+        return;
+      }
+      for (var i = 0; i < campaigns.length; i++) {
+        var camp = campaigns[i];
+        var tr = document.createElement('tr');
+        tr.innerHTML =
+          '<td><label class="switch"><input type="checkbox" ' + (camp.active ? 'checked' : '') + ' onchange="toggleCampaign(' + i + ')"><span class="slider"></span></label></td>' +
+          '<td><b>' + escapeHtml(camp.title) + '</b>' + (camp.imageUrl ? ' <span style="font-size:10px; background:rgba(56,189,248,0.2); color:#38BDF8; padding:2px 6px; border-radius:4px;">🖼️ Image</span>' : '') + '<br><small style="color:#94A3B8">' + escapeHtml(camp.description) + '</small></td>' +
+          '<td><span class="tag tag-blue">' + escapeHtml(camp.placementId) + '</span></td>' +
+          '<td><span class="tag tag-gold">' + escapeHtml(camp.ctaText) + '</span></td>' +
+          '<td>' + (camp.displayIntervalSeconds || 60) + 's</td>' +
+          '<td><button class="danger-btn" onclick="deleteCampaign(' + i + ')">Delete</button></td>';
+        tbody.appendChild(tr);
+      }
+    }
+
+    function savePricing() {
+      var price = Number(document.getElementById('vip-price-input').value) || 499;
+      currentConfig.pricing = { vipPriceINR: price, currency: 'INR', lifetimeEnabled: true };
+
+      fetch('/api/admin/config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(currentConfig)
+      }).then(function() {
+        showToast('VIP Price set to ₹' + price + ' successfully!');
+      }).catch(function(err) {
+        alert('Failed to save pricing: ' + err.message);
+      });
+    }
+
+    function saveAdCampaign() {
+      var title = document.getElementById('ad-title').value.trim();
+      if (!title) { alert('Please enter a campaign title'); return; }
+
+      var newCampaign = {
+        campaignId: 'camp_' + Date.now(),
+        title: title,
+        description: document.getElementById('ad-desc').value.trim() || '',
+        ctaText: document.getElementById('ad-cta').value.trim() || 'Learn More',
+        placementId: document.getElementById('ad-placement').value,
+        targetUrl: document.getElementById('ad-url').value.trim() || 'https://documentreader-two.vercel.app',
+        displayIntervalSeconds: Number(document.getElementById('ad-interval').value) || 60,
+        imageUrl: currentUploadedImage,
+        active: true,
+        priority: 10
+      };
+
+      currentConfig.ads = currentConfig.ads || [];
+      currentConfig.ads.unshift(newCampaign);
+
+      fetch('/api/admin/config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(currentConfig)
+      }).then(function() {
+        renderCampaignsTable();
+        showToast('Campaign published to app!');
+        // Reset form inputs
+        document.getElementById('ad-title').value = '';
+        document.getElementById('ad-desc').value = '';
+        document.getElementById('ad-cta').value = '';
+        currentUploadedImage = '';
+        document.getElementById('preview-img').innerHTML = '📄';
+      }).catch(function(err) {
+        alert('Failed to save campaign: ' + err.message);
+      });
+    }
+
+    function toggleCampaign(idx) {
+      if (currentConfig.ads && currentConfig.ads[idx]) {
+        currentConfig.ads[idx].active = !currentConfig.ads[idx].active;
+        fetch('/api/admin/config', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(currentConfig)
+        }).then(function() {
+          showToast('Campaign status updated!');
+        });
+      }
+    }
+
+    function deleteCampaign(idx) {
+      if (confirm('Delete this campaign?')) {
+        currentConfig.ads.splice(idx, 1);
+        fetch('/api/admin/config', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(currentConfig)
+        }).then(function() {
+          renderCampaignsTable();
+          showToast('Campaign deleted.');
+        });
+      }
+    }
+
+    window.onload = function() {
+      loadConfig();
+    };
+  </script>
+</body>
+</html>
